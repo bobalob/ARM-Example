@@ -54,7 +54,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "https://tbc/templates/Network.JSON",
+                    "uri": "https://raw.githubusercontent.com/bobalob/ARM-Example/master/Network.JSON",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -81,7 +81,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "https://tbc/templates/AvailabilityGroupWithLB.json",
+                    "uri": "https://raw.githubusercontent.com/bobalob/ARM-Example/master/AvailabilityGroupWithLB.json",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -117,7 +117,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "https://tbc/templates/AvailabilityGroup.json",
+                    "uri": "https://raw.githubusercontent.com/bobalob/ARM-Example/master/AvailabilityGroup.json",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -153,7 +153,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "https://tbc/templates/SingleVM.json",
+                    "uri": "https://raw.githubusercontent.com/bobalob/ARM-Example/master/SingleVM.json",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
