@@ -180,7 +180,7 @@
                 "autoUpgradeMinorVersion": true,
                 "settings": {
                     "fileUris": [
-                        "https://tbc/templates/ProvisionVM.PS1"
+                        "https://raw.githubusercontent.com/bobalob/ARM-Example/master/ProvisionVM.PS1"
                     ],
                     "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File ProvisionVM.PS1"
                 }
