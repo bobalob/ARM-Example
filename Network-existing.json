@@ -1,7 +1,20 @@
 {
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {},
+    "parameters": {
+        "vnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "The prefix for all common resources in the deployment"
+            }
+        },
+        "subnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "The prefix for all common resources in the deployment"
+            }
+        }
+    },
     "variables": {},
     "resources": [],
     "outputs": {}
