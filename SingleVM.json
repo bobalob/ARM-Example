@@ -20,10 +20,16 @@
                 "description": "Admin password"
             }
         },
-        "subnetId": {
+        "vNetName": {
             "type": "string",
             "metadata": {
-                "description": "Subnet id to provision the VMs into"
+                "description": "Network to provision the VMs into"
+            }
+        },
+        "subnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Subnet to provision the VMs into"
             }
         },
         "imagePublisher": {
@@ -65,7 +71,9 @@
         "storageAccountName": "[concat(parameters('resourcesPrefix'), 'storages')]",
         "vmNamePrefix": "[concat(parameters('resourcesPrefix'), 'vm-')]",
         "nicNamePrefix": "[concat(variables('vmNamePrefix'), 'nic-')]",
-        "numberOfInstances": 1
+        "numberOfInstances": 1,
+        "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',parameters('vnetName'))]",
+        "subnetRef": "[concat(variables('vnetID'),'/subnets/',parameters ('subnetName'))]"
     },
     "resources": [
         {
@@ -93,7 +101,7 @@
                         "properties": {
                             "privateIPAllocationMethod": "Dynamic",
                             "subnet": {
-                                "id": "[parameters('subnetId')]"
+                                "id": "[variables('subnetRef')]"
                             }
                         }
                     }
@@ -181,3 +189,4 @@
     ],
     "outputs": {}
 }
+
