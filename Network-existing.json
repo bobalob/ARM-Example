@@ -17,10 +17,5 @@
     },
     "variables": {},
     "resources": [],
-    "outputs": { 
-        "NetInfo": {
-            "value": "[reference(resourceId('networks', 'Microsoft.Network/virtualNetworks/',parameters('vNetName')), '2015-06-15').subnets[0].id]",
-            "type": "string"
-        }
-    }
+    "outputs": { }
 }
