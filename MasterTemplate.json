@@ -40,8 +40,8 @@
     "variables": {
         "netType" : "[variables(concat(parameters('netType'), 'NetName'))]",
         "existingNetName": {
-            "vNetName" : "smarterc-net",
-            "subNetName" : "smarterc-subnet1"
+            "vNetName" : "existingnet",
+            "subNetName" : "existingsubnet1"
         },
         "newNetName": {
             "vNetName" : "[concat(parameters('masterPrefix'), '-net')]",
