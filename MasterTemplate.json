@@ -8,6 +8,16 @@
                 "description": "The prefix for all common resources in the deployment"
             }
         },
+        "netType": {
+            "type": "string",
+            "metadata": {
+                "description": "Use an existing, hard coded network or create a new network"
+            },
+            "allowedValues": [
+                "existing",
+                "new"
+            ]
+        },
         "adminUsername": {
             "type": "string",
             "metadata": {
@@ -20,31 +30,25 @@
                 "description": "Admin password"
             }
         },
-        "availabilityGroupsWithLoadBalancer": {
-            "type": "array",
-            "defaultValue": [
-                "ninja",
-                "super"
-            ]
-        },
-        "availabilityGroups": {
-            "type": "array",
-            "defaultValue": [
-                "mega",
-                "hyper"
-            ]
-        },
         "singleVMs": {
             "type": "array",
             "defaultValue": [
-                "sweet",
-                "awesome"
+                "super"
             ]
         }
     },
     "variables": {
-        "vNetName": "[concat(parameters('masterPrefix'), '-net')]",
-        "subnetName": "[concat(parameters('masterPrefix'), '-subnet1')]"
+        "netType": "[variables(concat(parameters('netType'), 'NetName'))]",
+        "existingNetName": {
+            "vNetName": "super-net",
+            "subNetName": "super-subnet1",
+            "resourceGroupName": "SuperResources"
+        },
+        "newNetName": {
+            "vNetName": "[concat(parameters('masterPrefix'), '-net')]",
+            "subNetName": "[concat(parameters('masterPrefix'), '-subnet1')]",
+            "resourceGroupName": "[resourceGroup().name]"
+        }
     },
     "resources": [
         {
@@ -54,87 +58,15 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "https://raw.githubusercontent.com/bobalob/ARM-Example/master/Network.JSON",
+                    "uri": "[concat('https://raw.githubusercontent.com/bobalob/ARM-Example/conditional-branching/Network-', parameters('netType'), '.json')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
                     "vNetName": {
-                        "value": "[variables('vNetName')]"
+                        "value": "[variables('netType').vNetName]"
                     },
                     "subnetName": {
-                        "value": "[variables('subnetName')]"
-                    }
-                }
-            }
-        },
-        {
-            "name": "[concat('avlb', parameters('availabilityGroupsWithLoadBalancer')[copyIndex()])]",
-            "copy": {
-                "name": "avlbCopy",
-                "count": "[length(parameters('availabilityGroupsWithLoadBalancer'))]"
-            },
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2015-01-01",
-            "dependsOn": [
-                "Microsoft.Resources/deployments/networkTemplate"
-            ],
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "https://raw.githubusercontent.com/bobalob/ARM-Example/master/AvailabilityGroupWithLB.json",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "resourcesPrefix": {
-                        "value": "[ parameters( 'availabilityGroupsWithLoadBalancer')[copyIndex()] ]"
-                    },
-                    "adminUsername": {
-                        "value": "[parameters('adminUsername')]"
-                    },
-                    "adminPassword": {
-                        "value": "[parameters('adminPassword')]"
-                    },
-                    "vNetName": {
-                        "value": "[variables('vNetName')]"
-                    },
-                    "subnetName": {
-                        "value": "[variables('subnetName')]"
-                    }
-                }
-            }
-        },
-        {
-            "name": "[concat('av', parameters('availabilityGroups')[copyIndex()])]",
-            "copy": {
-                "name": "avlbCopy",
-                "count": "[length(parameters('availabilityGroups'))]"
-            },
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2015-01-01",
-            "dependsOn": [
-                "Microsoft.Resources/deployments/networkTemplate"
-            ],
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "https://raw.githubusercontent.com/bobalob/ARM-Example/master/AvailabilityGroup.json",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "resourcesPrefix": {
-                        "value": "[ parameters( 'availabilityGroups')[copyIndex()] ]"
-                    },
-                    "adminUsername": {
-                        "value": "[parameters('adminUsername')]"
-                    },
-                    "adminPassword": {
-                        "value": "[parameters('adminPassword')]"
-                    },
-                    "vNetName": {
-                        "value": "[variables('vNetName')]"
-                    },
-                    "subnetName": {
-                        "value": "[variables('subnetName')]"
+                        "value": "[variables('netType').subNetName]"
                     }
                 }
             }
@@ -153,7 +85,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "https://raw.githubusercontent.com/bobalob/ARM-Example/master/SingleVM.json",
+                    "uri": "https://raw.githubusercontent.com/bobalob/ARM-Example/conditional-branching//SingleVM.json",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -166,15 +98,17 @@
                     "adminPassword": {
                         "value": "[parameters('adminPassword')]"
                     },
-                    "vNetName": {
-                        "value": "[variables('vNetName')]"
-                    },
-                    "subnetName": {
-                        "value": "[variables('subnetName')]"
+                    "subnetId": {
+                        "value": "[ reference(resourceId(variables('netType').resourceGroupName, 'Microsoft.Network/virtualNetworks/', variables('netType').vNetName), '2015-06-15').subnets[0].id ]"
                     }
                 }
             }
         }
     ],
-    "outputs": {}
+    "outputs": {
+        "NetInfo": {
+            "value": "[ reference( resourceId( variables('netType').resourceGroupName , 'Microsoft.Network/virtualNetworks/' , variables('netType').vNetName) , '2015-06-15').subnets[0].id ]",
+            "type": "string"
+        }
+    }
 }
