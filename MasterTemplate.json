@@ -33,19 +33,19 @@
         "singleVMs": {
             "type": "array",
             "defaultValue": [
-                "sweet"
+                "vwconsole"
             ]
         }
     },
     "variables": {
         "netType" : "[variables(concat(parameters('netType'), 'NetName'))]",
         "existingNetName": {
-            "vNetName" : "Servers-vnet",
-            "subNetName" : "default"
+            "vNetName" : "smarterc-net",
+            "subNetName" : "smarterc-subnet1"
         },
         "newNetName": {
             "vNetName" : "[concat(parameters('masterPrefix'), '-net')]",
-            "subNetName" : "[concat(parameters('masterPrefix'), '-subnet1')]"
+            "subNetName" : "[concat(parameters('masterPrefix'), '-subnet1')]" 
         }
     },
     "resources": [
@@ -96,11 +96,8 @@
                     "adminPassword": {
                         "value": "[parameters('adminPassword')]"
                     },
-                    "vNetName": {
-                        "value": "[variables('netType').vNetName]"
-                    },
-                    "subnetName": {
-                        "value": "[variables('netType').subNetName]"
+                    "subnetId": {
+                        "value": "[reference(resourceId('networks', 'Microsoft.Network/virtualNetworks/', variables('netType').subNetName), '2015-06-15').subnets[0]]"
                     }
                 }
             }
