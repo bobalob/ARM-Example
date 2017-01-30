@@ -38,14 +38,16 @@
         }
     },
     "variables": {
-        "netType" : "[variables(concat(parameters('netType'), 'NetName'))]",
+        "netType": "[variables(concat(parameters('netType'), 'NetName'))]",
         "existingNetName": {
-            "vNetName" : "existingnet",
-            "subNetName" : "existingsubnet1"
+            "vNetName": "existing-net",
+            "subNetName": "existing-subnet1",
+            "resourceGroupName": "Existing-Resources"
         },
         "newNetName": {
-            "vNetName" : "[concat(parameters('masterPrefix'), '-net')]",
-            "subNetName" : "[concat(parameters('masterPrefix'), '-subnet1')]" 
+            "vNetName": "[concat(parameters('masterPrefix'), '-net')]",
+            "subNetName": "[concat(parameters('masterPrefix'), '-subnet1')]",
+            "resourceGroupName": "[resourceGroup().name]"
         }
     },
     "resources": [
@@ -97,11 +99,16 @@
                         "value": "[parameters('adminPassword')]"
                     },
                     "subnetId": {
-                        "value": "[reference(resourceId('networks', 'Microsoft.Network/virtualNetworks/', variables('netType').subNetName), '2015-06-15').subnets[0]]"
+                        "value": "[ reference(resourceId(variables('netType').resourceGroupName, 'Microsoft.Network/virtualNetworks/', variables('netType').vNetName), '2015-06-15').subnets[0].id ]"
                     }
                 }
             }
         }
     ],
-    "outputs": {}
+    "outputs": {
+        "NetInfo": {
+            "value": "[ reference( resourceId( variables('netType').resourceGroupName , 'Microsoft.Network/virtualNetworks/' , variables('netType').vNetName) , '2015-06-15').subnets[0].id ]",
+            "type": "string"
+        }
+    }
 }
