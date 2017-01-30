@@ -33,7 +33,7 @@
         "singleVMs": {
             "type": "array",
             "defaultValue": [
-                "vwconsole"
+                "awesome"
             ]
         }
     },
